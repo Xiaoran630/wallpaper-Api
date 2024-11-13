@@ -7,3 +7,7 @@ server:
     minio_name: XiaoRan
     minio_pass: VirSep20
     bucketName: img
+
+spring:
+  application:
+    name: wallpaper

@@ -1,12 +1,10 @@
 package com.example.wallpaper.service.impl;
 
 import com.example.wallpaper.service.WallpaperService;
-import io.minio.GetPresignedObjectUrlArgs;
-import io.minio.ListObjectsArgs;
-import io.minio.MinioClient;
-import io.minio.Result;
+import io.minio.*;
 import io.minio.http.Method;
 import io.minio.messages.Item;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +19,7 @@ import java.util.Random;
 @Service
 @Configuration
 public class WallpaperImpl implements WallpaperService {
+    private static MinioClient minioClient = null;
     @Value(value = "${server.minio.minio_url}")
     private String minioUrl;
     @Value(value = "${server.minio.minio_name}")
@@ -29,7 +28,6 @@ public class WallpaperImpl implements WallpaperService {
     private String minioPass;
     @Value(value = "${server.minio.bucketName}")
     private String bucketName;
-    private static MinioClient minioClient = null;
 
     private void initMinio() {
         if (minioClient == null) {
@@ -68,11 +66,24 @@ public class WallpaperImpl implements WallpaperService {
         initMinio();
         // 列出指定存储桶中的所有对象
         List<Item> objects = listObjects(bucketName);
-
         // 从对象列表中随机选择一个对象
         Random random = new Random();
         Item randomItem = objects.get(random.nextInt(objects.size()));
         GetPresignedObjectUrlArgs wallpaper = GetPresignedObjectUrlArgs.builder().method(Method.GET).bucket(bucketName).object(randomItem.objectName()).build();
         return minioClient.getPresignedObjectUrl(wallpaper);
+    }
+
+    @SneakyThrows
+    @Override
+    public byte[] randomImageFile() throws IOException {
+        initMinio();
+        // 列出指定存储桶中的所有对象
+        List<Item> objects = listObjects(bucketName);
+        // 从对象列表中随机选择一个对象
+        Random random = new Random();
+        Item randomItem = objects.get(random.nextInt(objects.size()));
+        GetObjectResponse response =
+                minioClient.getObject(GetObjectArgs.builder().bucket(bucketName).object(randomItem.objectName()).build());
+        return response.readAllBytes();
     }
 }
