@@ -24,14 +24,7 @@ public class WallpaperController {
 
     private final WallpaperService wallpaperService;
 
-    @GetMapping(value = "/wallpaper",
-            produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    ResponseEntity<String> getWallpaper() throws Exception {
-        String targetUrl = wallpaperService.randomImageUrl();
-        return new ResponseEntity<>(targetUrl, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/test")
+    @GetMapping(value = "/wallpaper")
     ResponseEntity<byte[]> getWallpaperTest(HttpServletResponse response) throws Exception {
         //return ResponseEntity.ok()
         //        .header(HttpHeaders.CONTENT_TYPE, "image/jpeg")  // 根据实际情况设置 MIME 类型
@@ -43,4 +36,10 @@ public class WallpaperController {
                 .body(wallpaperService.randomImageFile());
     }
 
+    @GetMapping(value = "/test",
+            produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
+    ResponseEntity<String> getWallpaper() throws Exception {
+        String targetUrl = wallpaperService.randomImageUrl();
+        return new ResponseEntity<>(targetUrl, HttpStatus.OK);
+    }
 }
