@@ -37,7 +37,7 @@ public class WallpaperImpl implements WallpaperService {
                         .endpoint(minioUrl)
                         .credentials(minioName, minioPass)
                         .build();
-                log.info("MinIO连接成功{}", minioClient);
+                log.info("MinIO连接成功 {}", minioClient);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -67,11 +67,14 @@ public class WallpaperImpl implements WallpaperService {
         initMinio();
         // 列出指定存储桶中的所有对象
         List<Item> objects = listObjects(bucketName);
-        // 从对象列表中随机选择一个对象
-        Random random = new Random();
-        Item randomItem = objects.get(random.nextInt(objects.size()));
-        GetPresignedObjectUrlArgs wallpaper = GetPresignedObjectUrlArgs.builder().method(Method.GET).bucket(bucketName).object(randomItem.objectName()).build();
-        return minioClient.getPresignedObjectUrl(wallpaper);
+        if(!objects.isEmpty()){
+            // 从对象列表中随机选择一个对象
+            Random random = new Random();
+            Item randomItem = objects.get(random.nextInt(objects.size()));
+            GetPresignedObjectUrlArgs wallpaper = GetPresignedObjectUrlArgs.builder().method(Method.GET).bucket(bucketName).object(randomItem.objectName()).build();
+            return minioClient.getPresignedObjectUrl(wallpaper);
+        }
+        return null;
     }
 
     @SneakyThrows
