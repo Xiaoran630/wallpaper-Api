@@ -1,3 +1,4 @@
 spring:
   profiles:
-    active: dev #需要使用的配置文件的后缀
+#    active: dev #本地
+    active: prod #正式

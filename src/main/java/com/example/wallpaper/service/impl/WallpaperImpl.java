@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -81,9 +82,12 @@ public class WallpaperImpl implements WallpaperService {
         List<Item> objects = listObjects(bucketName);
         // 从对象列表中随机选择一个对象
         Random random = new Random();
-        Item randomItem = objects.get(random.nextInt(objects.size()));
-        GetObjectResponse response =
-                minioClient.getObject(GetObjectArgs.builder().bucket(bucketName).object(randomItem.objectName()).build());
-        return response.readAllBytes();
+        if(!objects.isEmpty()){
+            Item randomItem = objects.get(random.nextInt(objects.size()));
+            GetObjectResponse response =
+                    minioClient.getObject(GetObjectArgs.builder().bucket(bucketName).object(randomItem.objectName()).build());
+            return response.readAllBytes();
+        }
+        return null;
     }
 }

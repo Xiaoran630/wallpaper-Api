@@ -7,4 +7,4 @@ server:
     minio_url: http://localhost:9000
     minio_name: XiaoRan
     minio_pass: VirSep20
-    bucketName: img
+    bucketName: wallpaper
