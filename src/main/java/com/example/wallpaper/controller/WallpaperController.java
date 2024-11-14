@@ -32,7 +32,7 @@ public class WallpaperController {
         //        .body(inputStream);
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"image.jpg\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;")
                 .body(wallpaperService.randomImageFile());
     }
 
