@@ -1,5 +1,6 @@
 package com.example.wallpaper.controller;
 
+import com.example.wallpaper.common.vo.Result;
 import com.example.wallpaper.service.WallpaperService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -15,10 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-
 /**
- * @author
+ * @author XiaoRan
  **/
 @Slf4j
 @CrossOrigin
@@ -47,18 +46,28 @@ public class WallpaperController {
                 .body("<html><meta charset=\"UTF-8\"></meta><body><h1>Wallpaper-Api</h1><p>暂无壁纸，请联系管理员添加壁纸。</p></body></html>".getBytes());
     }
 
+//    @GetMapping(value = "/url")
+//    ResponseEntity<Object> getWallpaperUrl() throws Exception {
+//        String url = wallpaperService.randomImageUrl();
+//        JSONObject jsonObject = new JSONObject();
+//        if (url != null) {
+//            jsonObject.put("url", url);
+//            jsonObject.put("code", 200);
+//            jsonObject.put("msg", "success");
+//            return ResponseEntity.ok().body(jsonObject);
+//        }
+//        jsonObject.put("code", 500);
+//        jsonObject.put("msg", "暂无壁纸，请联系管理员添加壁纸。");
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("暂无壁纸，请联系管理员添加壁纸。");
+//    }
+
     @GetMapping(value = "/url")
-    ResponseEntity<Object> getWallpaperUrl() throws Exception {
+    Result<Object> getWallpaperUrl() throws Exception {
         String url = wallpaperService.randomImageUrl();
-        JSONObject jsonObject = new JSONObject();
         if (url != null) {
-            jsonObject.put("url", url);
-            jsonObject.put("code", 200);
-            jsonObject.put("msg", "success");
-            return ResponseEntity.ok().body(jsonObject);
+            return Result.ok(url).success("获取成功");
         }
-        jsonObject.put("code", 500);
-        jsonObject.put("msg", "暂无壁纸，请联系管理员添加壁纸。");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("暂无壁纸，请联系管理员添加壁纸。");
+
+        return Result.error("暂无壁纸，请联系管理员添加壁纸。");
     }
 }

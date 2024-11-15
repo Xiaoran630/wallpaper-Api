@@ -21,7 +21,7 @@ public class WallpaperApplication {
         String path = env.getProperty("server.servlet.context-path");
         log.info("\n----------------------------------------------------------\n\t" +
                 "Application is running! Access URLs:\n\t" +
-                "Local: \t\thttp://localhost:" + port + path + "/wallpaper\n\t" +
+                "Local: \t\thttp://localhost:" + port + path + "/wallpaper/\n\t" +
                 "----------------------------------------------------------");
     }
 
