@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -39,7 +38,7 @@ public class WallpaperImpl implements WallpaperService {
                         .build();
                 log.info("MinIO连接成功 {}", minioClient);
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("MinIO连接失败 {}", e.getMessage());
             }
         }
     }
@@ -56,7 +55,7 @@ public class WallpaperImpl implements WallpaperService {
             }
             return items;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error occurred while listing objects in MinIO {}", e.getMessage());
             throw new IOException("Error occurred while listing objects in MinIO", e);
         }
     }
@@ -80,17 +79,17 @@ public class WallpaperImpl implements WallpaperService {
     @SneakyThrows
     @Override
     public byte[] randomImageFile() throws IOException {
-        initMinio();
-        // 列出指定存储桶中的所有对象
-        List<Item> objects = listObjects(bucketName);
-        // 从对象列表中随机选择一个对象
-        Random random = new Random();
-        if(!objects.isEmpty()){
-            Item randomItem = objects.get(random.nextInt(objects.size()));
-            GetObjectResponse response =
-                    minioClient.getObject(GetObjectArgs.builder().bucket(bucketName).object(randomItem.objectName()).build());
-            return response.readAllBytes();
-        }
-        return null;
+            initMinio();
+            // 列出指定存储桶中的所有对象
+            List<Item> objects = listObjects(bucketName);
+            // 从对象列表中随机选择一个对象
+            Random random = new Random();
+            if(!objects.isEmpty()){
+                Item randomItem = objects.get(random.nextInt(objects.size()));
+                GetObjectResponse response =
+                        minioClient.getObject(GetObjectArgs.builder().bucket(bucketName).object(randomItem.objectName()).build());
+                return response.readAllBytes();
+            }
+            return null;
     }
 }

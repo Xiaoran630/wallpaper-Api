@@ -67,7 +67,6 @@ public class WallpaperController {
         if (url != null) {
             return Result.ok(url).success("获取成功");
         }
-
         return Result.error("暂无壁纸，请联系管理员添加壁纸。");
     }
 }
