@@ -4,7 +4,7 @@ server:
   port: 9528 #配置端口号
   address: 0.0.0.0
   minio:
-    minio_url: http://localhost:9000
+    minio_url: https://hanxiaoran.top:9000
     minio_name: XiaoRan
     minio_pass: VirSep20
     bucketName: wallpaper

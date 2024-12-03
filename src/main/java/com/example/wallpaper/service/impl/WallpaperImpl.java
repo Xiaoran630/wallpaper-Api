@@ -33,10 +33,10 @@ public class WallpaperImpl implements WallpaperService {
         if (minioClient == null) {
             try {
                 minioClient = MinioClient.builder()
-                        .endpoint(minioUrl)
+                        .endpoint(minioUrl, 9000, true)
                         .credentials(minioName, minioPass)
                         .build();
-                log.info("MinIO连接成功 {}", minioClient);
+                log.info("MinIO连接成功 {}", minioUrl);
             } catch (Exception e) {
                 log.error("MinIO连接失败 {}", e.getMessage());
             }
