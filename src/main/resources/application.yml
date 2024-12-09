@@ -1,4 +1,4 @@
 spring:
   profiles:
-#    active: dev #本地
-    active: prod #正式
+    active: dev #本地
+#    active: prod #正式

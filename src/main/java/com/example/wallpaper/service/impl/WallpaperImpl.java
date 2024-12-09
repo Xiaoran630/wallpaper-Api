@@ -1,5 +1,6 @@
 package com.example.wallpaper.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.wallpaper.service.WallpaperService;
 import io.minio.*;
 import io.minio.http.Method;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -30,6 +32,9 @@ public class WallpaperImpl implements WallpaperService {
     private String bucketName;
 
     private void initMinio() {
+        if(!minioUrl.endsWith("/")){
+            minioUrl = minioUrl.concat("/");
+        }
         if (minioClient == null) {
             try {
                 minioClient = MinioClient.builder()
@@ -62,16 +67,23 @@ public class WallpaperImpl implements WallpaperService {
 
 
     @Override
-    public String randomImageUrl() throws Exception {
+    public JSONObject randomImageUrl() throws Exception {
         initMinio();
         // 列出指定存储桶中的所有对象
         List<Item> objects = listObjects(bucketName);
-        if(!objects.isEmpty()){
+        JSONObject obj = new JSONObject(new LinkedHashMap<>());
+        if (!objects.isEmpty()) {
             // 从对象列表中随机选择一个对象
             Random random = new Random();
             Item randomItem = objects.get(random.nextInt(objects.size()));
-            GetPresignedObjectUrlArgs wallpaper = GetPresignedObjectUrlArgs.builder().method(Method.GET).bucket(bucketName).object(randomItem.objectName()).build();
-            return minioClient.getPresignedObjectUrl(wallpaper);
+            log.info("randomImageUrl-path: {}/{}", bucketName, randomItem.objectName());
+//            GetPresignedObjectUrlArgs wallpaper = GetPresignedObjectUrlArgs.builder()
+//                    .method(Method.GET).bucket(bucketName).object(randomItem.objectName()).build();
+//            String url = minioClient.getPresignedObjectUrl(wallpaper);
+            String url = minioUrl + bucketName + "/" + randomItem.objectName();
+            obj.put("url", url);
+            obj.put("path", bucketName + "/" + randomItem.objectName());
+            return obj;
         }
         return null;
     }
@@ -79,17 +91,18 @@ public class WallpaperImpl implements WallpaperService {
     @SneakyThrows
     @Override
     public byte[] randomImageFile() throws IOException {
-            initMinio();
-            // 列出指定存储桶中的所有对象
-            List<Item> objects = listObjects(bucketName);
-            // 从对象列表中随机选择一个对象
-            Random random = new Random();
-            if(!objects.isEmpty()){
-                Item randomItem = objects.get(random.nextInt(objects.size()));
-                GetObjectResponse response =
-                        minioClient.getObject(GetObjectArgs.builder().bucket(bucketName).object(randomItem.objectName()).build());
-                return response.readAllBytes();
-            }
-            return null;
+        initMinio();
+        // 列出指定存储桶中的所有对象
+        List<Item> objects = listObjects(bucketName);
+        // 从对象列表中随机选择一个对象
+        Random random = new Random();
+        if (!objects.isEmpty()) {
+            Item randomItem = objects.get(random.nextInt(objects.size()));
+            log.info("randomImageFile-path: {}/{}", bucketName, randomItem.objectName());
+            GetObjectResponse response =
+                    minioClient.getObject(GetObjectArgs.builder().bucket(bucketName).object(randomItem.objectName()).build());
+            return response.readAllBytes();
+        }
+        return null;
     }
 }

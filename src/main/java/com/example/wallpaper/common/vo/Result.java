@@ -7,6 +7,8 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  *   接口返回数据格式
@@ -39,9 +41,10 @@ public class Result<T> implements Serializable {
     private T result;
 
     /**
-     * 时间戳
+     * 时间
      */
-    private long timestamp = System.currentTimeMillis();
+//    private long timestamp = System.currentTimeMillis();
+    private String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
     public Result() {
     }
