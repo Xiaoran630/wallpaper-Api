@@ -2,6 +2,7 @@ package com.example.wallpaper.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.wallpaper.service.WallpaperService;
+import com.example.wallpaper.common.constant.CommonConstant;
 import io.minio.*;
 import io.minio.http.Method;
 import io.minio.messages.Item;
@@ -32,8 +33,8 @@ public class WallpaperImpl implements WallpaperService {
     private String bucketName;
 
     private void initMinio() {
-        if(!minioUrl.endsWith("/")){
-            minioUrl = minioUrl.concat("/");
+        if(!minioUrl.endsWith(CommonConstant.Str_SLASH)){
+            minioUrl = minioUrl.concat(CommonConstant.Str_SLASH);
         }
         if (minioClient == null) {
             try {
@@ -80,9 +81,9 @@ public class WallpaperImpl implements WallpaperService {
 //            GetPresignedObjectUrlArgs wallpaper = GetPresignedObjectUrlArgs.builder()
 //                    .method(Method.GET).bucket(bucketName).object(randomItem.objectName()).build();
 //            String url = minioClient.getPresignedObjectUrl(wallpaper);
-            String url = minioUrl + bucketName + "/" + randomItem.objectName();
+            String url = minioUrl + bucketName + CommonConstant.Str_SLASH + randomItem.objectName();
             obj.put("url", url);
-            obj.put("path", bucketName + "/" + randomItem.objectName());
+            obj.put("path", bucketName + CommonConstant.Str_SLASH + randomItem.objectName());
             return obj;
         }
         return null;

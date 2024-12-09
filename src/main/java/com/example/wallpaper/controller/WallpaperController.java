@@ -28,6 +28,12 @@ public class WallpaperController {
 
     private final WallpaperService wallpaperService;
 
+    /**
+     * 获取壁纸
+     * @param response
+     * @return
+     * @throws Exception
+     */
     @GetMapping(value = "/")
     ResponseEntity<byte[]> getWallpaper(HttpServletResponse response) throws Exception {
         //return ResponseEntity.ok()
@@ -46,6 +52,11 @@ public class WallpaperController {
                 .body("<html><meta charset=\"UTF-8\"></meta><body><h1>Wallpaper-Api</h1><p>暂无壁纸，请联系管理员添加壁纸。</p></body></html>".getBytes());
     }
 
+    /**
+     * 获取壁纸链接
+     * @return
+     * @throws Exception
+     */
     @GetMapping(value = "/url")
     Result<Object> getWallpaperUrl() throws Exception {
         JSONObject obj = wallpaperService.randomImageUrl();

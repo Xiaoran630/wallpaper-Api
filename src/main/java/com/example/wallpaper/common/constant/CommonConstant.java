@@ -51,4 +51,9 @@ public interface CommonConstant {
      * String 类型的空值
      */
     String STRING_NULL = "null";
+
+    /**
+     * String类型斜杠
+     */
+    String Str_SLASH = "/";
 }
